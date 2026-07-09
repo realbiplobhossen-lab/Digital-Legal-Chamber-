@@ -23,7 +23,7 @@ jobs:
         distribution: 'temurin'
         cache: gradle
 
-    # 🌟 ৩. অফিশিয়াল সার্ভার থেকে নিখুঁত gradle-wrapper.jar ফাইলটি অটোমেটিক ডাউনলোড করা
+    # 🌟 ৩. গিটহাব সার্ভারে একদম নতুন ও আসল gradle-wrapper.jar স্বয়ংক্রিয়ভাবে তৈরি ও ডাউনলোড করা
     - name: Download fresh gradle-wrapper.jar automatically
       run: |
         mkdir -p gradle/wrapper
@@ -44,11 +44,11 @@ jobs:
 
     # ⑥. প্রোজেক্টের লোকাল ইউনিট টেস্টগুলো ব্যাকগ্রাউন্ডে রান করা
     - name: Run Local Unit Tests
-      run: ./gradlew testDebugUnitTest
+      run: ./gradlew testDebugUnitTest --no-daemon
 
     # ৭. অ্যান্ড্রয়েড অ্যাপের ডিবাগ APK বিল্ড করা
     - name: Build Debug APK
-      run: ./gradlew assembleDebug
+      run: ./gradlew assembleDebug --no-daemon
 
     # ৮. তৈরি হওয়া সফল অ্যাপ (APK) আউটপুট হিসেবে সংরক্ষণ করা
     - name: Upload Generated Debug APK
