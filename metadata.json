@@ -1,0 +1,7 @@
+{
+  "name": "Digital Legal Chamber",
+  "description": "একটি সম্পূর্ণ ডিজিটাল লিগ্যাল চেম্বার ও অল-ইন-ওয়ান আইন অনুশীলন ম্যানেজমেন্ট অ্যাপ।",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
