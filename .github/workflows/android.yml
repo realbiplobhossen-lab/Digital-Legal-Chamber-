@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # ১. GitHub রিপোজিটরি থেকে কোড ডাউনলোড করা
+    # ১. GitHub密集 কোড ডাউনলোড করা
     - name: Checkout project source code
       uses: actions/checkout@v4
 
@@ -33,15 +33,22 @@ jobs:
       run: |
         sed -i '/alias(libs.plugins.roborazzi)/d' app/build.gradle.kts
 
-    # 🌟 ৫. টমেইল (TOML) রেফারেন্সের এরর এড়াতে সরাসরি স্ট্রিং ডিপেন্ডেন্সিতে কনভার্ট করা
+    # 🌟 ৫. টমেইল (TOML) রেফারেন্সের মিসিং ভার্সন এবং রিক্যাপচা লাইব্রেরি ফিক্স করা
     - name: Fix Unresolved Dependency References
       run: |
         sed -i 's/libs.androidx.compose.material.icons.core/"androidx.compose.material:material-icons-core:1.7.0"/g' app/build.gradle.kts
         sed -i 's/libs.androidx.compose.material.icons.extended/"androidx.compose.material:material-icons-extended:1.7.0"/g' app/build.gradle.kts
         sed -i 's/libs.firebase.analytics/"com.google.firebase:firebase-analytics"/g' app/build.gradle.kts
         sed -i 's/libs.firebase.appcheck.playintegrity/"com.google.firebase:firebase-appcheck-playintegrity"/g' app/build.gradle.kts
+        sed -i 's/libs.firebase.appcheck.recaptcha/"com.google.firebase:firebase-appcheck-recaptcha:16.1.2"/g' app/build.gradle.kts
 
-    # ⑥. GitHub Secrets থেকে সুরক্ষিতভাবে আসল Gemini API Key নিয়ে .env ফাইল তৈরি করা
+    # 🌟 ⑥. মিসিং google-services.json ফাইলটি ডামি হিসেবে তৈরি করা যেন প্লাগইন ক্র্যাশ না করে
+    - name: Create Dummy Google Services JSON
+      run: |
+        mkdir -p app
+        echo '{"project_info":{"project_number":"123","project_id":"dummy","storage_bucket":"dummy"},"client":[{"client_info":{"mobilesdk_app_id":"1:123:android:123","android_client_info":{"package_name":"com.aistudio.digitallegalchamber.lkjsda"}},"api_key":[{"current_key":"dummy"}],"services":{}}],"configuration_version":"3"}' > app/google-services.json
+
+    # ৭. GitHub Secrets থেকে সুরক্ষিতভাবে আসল Gemini API Key নিয়ে .env ফাইল তৈরি করা
     - name: Create Production .env file from GitHub Secrets
       run: |
         echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" > .env
@@ -50,11 +57,11 @@ jobs:
         echo "KEY_ALIAS=upload" >> .env
         echo "KEY_PASSWORD=android" >> .env
 
-    # ⑦. সরাসরি মূল অ্যান্ড্রয়েড অ্যাপের ডিবাগ APK বিল্ড করা
+    # ৮. সরাসরি মূল অ্যান্ড্রয়েড অ্যাপের ডিবাগ APK বিল্ড করা
     - name: Build Debug APK
       run: gradle assembleDebug --no-daemon --no-configuration-cache -x test
       
-    # ⑧. তৈরি হওয়া সফল অ্যাপ (APK) আউটপুট হিসেবে সংরক্ষণ করা
+    # ৯. তৈরি হওয়া সফল অ্যাপ (APK) আউটপুট হিসেবে সংরক্ষণ করা
     - name: Upload Generated Debug APK
       uses: actions/upload-artifact@v4
       with:
