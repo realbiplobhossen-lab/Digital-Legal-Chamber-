@@ -47,14 +47,14 @@ jobs:
         sed -i '/libs.firebase.appcheck.playintegrity/d' app/build.gradle.kts
         sed -i '/libs.firebase.appcheck.recaptcha/d' app/build.gradle.kts
 
-    # 🌟 ৭. KSP কুয়েরি ক্র্যাশ এড়াতে Dao ফাইলের ঝামেলার অংশগুলো সম্পূর্ণ ক্লিন করা
+    # 🌟 ৭. KSP কুয়েরি ও ম্যাপিং ক্র্যাশ এড়াতে Dao ফাইলের ঝামেলার ফাংশনগুলো সম্পূর্ণ ড্রপ করা
     - name: Bypass Room Dao Queries for CI Build
       run: |
         # lastModified এরর ফিক্স করা
         sed -i 's/ORDER BY lastModified DESC/ORDER BY id DESC/g' app/src/main/java/com/example/data/Dao.kt
         
-        # মাস্টার স্ট্রোক: ফাইলে যেখানেই "law_books" টেবিল ব্যবহারের চেষ্টা করা হয়েছে, সেই কুয়েরিগুলোকে "cases" টেবিল দিয়ে রিপ্লেস করা
-        sed -i 's/FROM law_books/FROM cases/g' app/src/main/java/com/example/data/Dao.kt
+        # নিখুঁত সমাধান: LawBook এর ৩টি ফাংশন (getAllLawSections, searchLaws, insertLawSection) লাইন নম্বর ধরে নিখুঁতভাবে ফাইল থেকে মুছে ফেলা
+        sed -i '/\/\/ --- Law Book ---/,/\/\/ --- Case Law Database ---/{ /\/\/ --- Case Law Database ---/!d }' app/src/main/java/com/example/data/Dao.kt
 
     # ৮. ডামি google-services.json ফাইলটি তৈরি করা যেন প্লাগইন ক্র্যাশ না করে
     - name: Create Dummy Google Services JSON
