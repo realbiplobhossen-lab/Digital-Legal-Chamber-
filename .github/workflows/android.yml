@@ -28,12 +28,20 @@ jobs:
       with:
         gradle-version: 9.3.1
 
-    # 🌟 ৪. Roborazzi প্লাগইন লাইনটি বিল্ড ফাইল থেকে নিখুঁতভাবে রিমুভ করা
+    # ৪. Roborazzi প্লাগইন লাইনটি বিল্ড ফাইল থেকে রিমুভ করা
     - name: Disable Roborazzi plugin for CI Build
       run: |
         sed -i '/alias(libs.plugins.roborazzi)/d' app/build.gradle.kts
 
-    # ৫. GitHub Secrets থেকে সুরক্ষিতভাবে আসল Gemini API Key নিয়ে .env ফাইল তৈরি করা
+    # 🌟 ৫. টমেইল (TOML) রেফারেন্সের এরর এড়াতে সরাসরি স্ট্রিং ডিপেন্ডেন্সিতে কনভার্ট করা
+    - name: Fix Unresolved Dependency References
+      run: |
+        sed -i 's/libs.androidx.compose.material.icons.core/"androidx.compose.material:material-icons-core:1.7.0"/g' app/build.gradle.kts
+        sed -i 's/libs.androidx.compose.material.icons.extended/"androidx.compose.material:material-icons-extended:1.7.0"/g' app/build.gradle.kts
+        sed -i 's/libs.firebase.analytics/"com.google.firebase:firebase-analytics"/g' app/build.gradle.kts
+        sed -i 's/libs.firebase.appcheck.playintegrity/"com.google.firebase:firebase-appcheck-playintegrity"/g' app/build.gradle.kts
+
+    # ⑥. GitHub Secrets থেকে সুরক্ষিতভাবে আসল Gemini API Key নিয়ে .env ফাইল তৈরি করা
     - name: Create Production .env file from GitHub Secrets
       run: |
         echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" > .env
@@ -42,11 +50,11 @@ jobs:
         echo "KEY_ALIAS=upload" >> .env
         echo "KEY_PASSWORD=android" >> .env
 
-    # ⑥. সরাসরি মূল অ্যান্ড্রয়েড অ্যাপের ডিবাগ APK বিল্ড করা (ক্যাশ ছাড়াই)
+    # ⑦. সরাসরি মূল অ্যান্ড্রয়েড অ্যাপের ডিবাগ APK বিল্ড করা
     - name: Build Debug APK
       run: gradle assembleDebug --no-daemon --no-configuration-cache -x test
       
-    # ⑦. তৈরি হওয়া সফল অ্যাপ (APK) আউটপুট হিসেবে সংরক্ষণ করা
+    # ⑧. তৈরি হওয়া সফল অ্যাপ (APK) আউটপুট হিসেবে সংরক্ষণ করা
     - name: Upload Generated Debug APK
       uses: actions/upload-artifact@v4
       with:
