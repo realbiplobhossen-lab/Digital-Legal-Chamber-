@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # ১. GitHub রিপোজিটরি থেকে কোড ডাউনলোড করা
+    # ১. GitHub রিপোজিটরি থেকে কোড ডাউনলোড (Checkout) করা
     - name: Checkout project source code
       uses: actions/checkout@v4
 
@@ -23,13 +23,13 @@ jobs:
         distribution: 'temurin'
         cache: gradle
 
-    # 🌟 [নতুন স্টেপ] গ্র্যাডল র‍্যাপার জার ফাইলটি অটোমেটিক ডাউনলোড করা
-    - name: Download gradle-wrapper.jar automatically
+    # 🌟 ৩. অফিশিয়াল সার্ভার থেকে নিখুঁত gradle-wrapper.jar ফাইলটি অটোমেটিক ডাউনলোড করা
+    - name: Download fresh gradle-wrapper.jar automatically
       run: |
         mkdir -p gradle/wrapper
         curl -L -o gradle/wrapper/gradle-wrapper.jar https://raw.githubusercontent.com/gradle/gradle/v8.5.0/gradle/wrapper/gradle-wrapper.jar
 
-    # ৩. GitHub Secrets থেকে সুরক্ষিতভাবে আসল Gemini API Key নিয়ে .env ফাইল তৈরি করা
+    # ৪. GitHub Secrets থেকে সুরক্ষিতভাবে আসল Gemini API Key নিয়ে .env ফাইল তৈরি করা
     - name: Create Production .env file from GitHub Secrets
       run: |
         echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" > .env
@@ -38,19 +38,19 @@ jobs:
         echo "KEY_ALIAS=upload" >> .env
         echo "KEY_PASSWORD=android" >> .env
 
-    # ৪. গ্র্যাডল স্ক্রিপ্ট রান করার এক্সিকিউটেবল পারমিশন দেওয়া
+    # ৫. গ্র্যাডল স্ক্রিপ্ট রান করার এক্সিকিউটেবল পারমিশন দেওয়া
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    # ৫. প্রোজেক্টের লোকাল ইউনিট টেস্টগুলো ব্যাকগ্রাউন্ডে রান করা
+    # ⑥. প্রোজেক্টের লোকাল ইউনিট টেস্টগুলো ব্যাকগ্রাউন্ডে রান করা
     - name: Run Local Unit Tests
       run: ./gradlew testDebugUnitTest
 
-    # ⑥. অ্যান্ড্রয়েড অ্যাপের ডিবাগ APK বিল্ড করা
+    # ৭. অ্যান্ড্রয়েড অ্যাপের ডিবাগ APK বিল্ড করা
     - name: Build Debug APK
       run: ./gradlew assembleDebug
 
-    # ৭. তৈরি হওয়া সফল অ্যাপ (APK) আউটপুট হিসেবে সংরক্ষণ করা
+    # ৮. তৈরি হওয়া সফল অ্যাপ (APK) আউটপুট হিসেবে সংরক্ষণ করা
     - name: Upload Generated Debug APK
       uses: actions/upload-artifact@v4
       with:
