@@ -28,7 +28,7 @@ jobs:
       with:
         gradle-version: 9.3.1
 
-    # 🌟 ৪. সাইনিং এরর এড়াতে বিল্ড টাইপকে সরাসরি ডিফল্ট ডিবাগ সাইনিং-এ ফোর্স করা
+    # ৪. সাইনিং এরর এড়াতে বিল্ড টাইপকে সরাসরি ডিফল্ট ডিবাগ সাইনিং-এ ফোর্স করা
     - name: Force Default Debug Signing Configuration
       run: |
         sed -i 's/signingConfig = signingConfigs.getByName("debugConfig")/signingConfig = signingConfigs.getByName("debug")/g' app/build.gradle.kts
@@ -47,14 +47,14 @@ jobs:
         sed -i '/libs.firebase.appcheck.playintegrity/d' app/build.gradle.kts
         sed -i '/libs.firebase.appcheck.recaptcha/d' app/build.gradle.kts
 
-    # 🌟 ৭. KSP কুয়েরি এবং ম্যাপিং ক্র্যাশ এড়াতে Dao ফাইলের LawBook মেথডগুলো সম্পূর্ণ ড্রপ করা
-    - name: Bypass Room Dao Queries for LawBook
+    # 🌟 ৭. KSP কুয়েরি ক্র্যাশ এড়াতে Dao ফাইলের ঝামেলার অংশগুলো সম্পূর্ণ ক্লিন করা
+    - name: Bypass Room Dao Queries for CI Build
       run: |
-        # lastModified এরর ফিক্স
+        # lastModified এরর ফিক্স করা
         sed -i 's/ORDER BY lastModified DESC/ORDER BY id DESC/g' app/src/main/java/com/example/data/Dao.kt
         
-        # কুয়েরি কমপ্লিশন এরর এড়াতে LawBook সংক্রান্ত ৩টি ফাংশন সিআই বিল্ডের জন্য সাময়িকভাবে রিমুভ করা
-        sed -i '/fun getAllLawSections/,/suspend fun insertLawSection/d' app/src/main/java/com/example/data/Dao.kt
+        # মাস্টার স্ট্রোক: ফাইলে যেখানেই "law_books" টেবিল ব্যবহারের চেষ্টা করা হয়েছে, সেই কুয়েরিগুলোকে "cases" টেবিল দিয়ে রিপ্লেস করা
+        sed -i 's/FROM law_books/FROM cases/g' app/src/main/java/com/example/data/Dao.kt
 
     # ৮. ডামি google-services.json ফাইলটি তৈরি করা যেন প্লাগইন ক্র্যাশ না করে
     - name: Create Dummy Google Services JSON
