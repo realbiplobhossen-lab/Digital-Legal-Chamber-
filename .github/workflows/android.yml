@@ -22,14 +22,13 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    # ৩. উবুন্টু সার্ভারে সরাসরি লেটেস্ট Gradle 9.3.1 ইন্সটল করা
+    # ৩. উবুন্টু সার্ভারে সরাসরি লেটেস্ট Gradle 9.3.1 ইন্সটল করা (স্পেসিং ফিক্সড)
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
       with:
-        with:
-          gradle-version: 9.3.1
+        gradle-version: 9.3.1
 
-    # ৪. Roborazzi প্লাগইন লাইনটি বিল্ড ফাইলের প্লাগইনブロック থেকে রিমুভ করা
+    # ৪. Roborazzi প্লাগইন লাইনটি বিল্ড ফাইলের প্লাগইন ব্লক থেকে রিমুভ করা
     - name: Disable Roborazzi plugin for CI Build
       run: |
         sed -i '/alias(libs.plugins.roborazzi)/d' app/build.gradle.kts
@@ -43,13 +42,10 @@ jobs:
         sed -i '/libs.firebase.appcheck.playintegrity/d' app/build.gradle.kts
         sed -i '/libs.firebase.appcheck.recaptcha/d' app/build.gradle.kts
 
-    # 🌟 ⑥. KSP (Room Database) কুয়েরি ক্র্যাশ এড়াতে Dao ফাইলের ভুল কুয়েরিগুলো স্বয়ংক্রিয়ভাবে বাইপাস করা
+    # ⑥. KSP (Room Database) কুয়েরি ক্র্যাশ এড়াতে Dao ফাইলের ভুল কুয়েরিগুলো স্বয়ংক্রিয়ভাবে বাইপাস করা
     - name: Fix Room Dao Queries for CI Build
       run: |
-        # lastModified এরর ফিক্স (সহজ ORDER BY id সেট করা)
         sed -i 's/ORDER BY lastModified DESC/ORDER BY id DESC/g' app/src/main/java/com/example/data/Dao.kt
-        
-        # law_books টেবিল মিসিং এরর ফিক্স (সাময়িকভাবে অন্য সফল টেবিল 'cases' দিয়ে রিপ্লেস করে বিল্ড পাস করানো)
         sed -i 's/FROM law_books/FROM cases/g' app/src/main/java/com/example/data/Dao.kt
 
     # ৭. ডামি google-services.json ফাইলটি তৈরি করা যেন প্লাগইন ক্র্যাশ না করে
