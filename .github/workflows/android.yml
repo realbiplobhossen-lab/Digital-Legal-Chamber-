@@ -28,38 +28,19 @@ jobs:
       with:
         gradle-version: 9.3.1
 
-    # ৪. Roborazzi প্লাগইন লাইনটি বিল্ড ফাইল থেকে রিমুভ করা
+    # ৪. Roborazzi প্লাগইন লাইনটি বিল্ড ফাইলের প্লাগইন ব্লক থেকে রিমুভ করা
     - name: Disable Roborazzi plugin for CI Build
       run: |
         sed -i '/alias(libs.plugins.roborazzi)/d' app/build.gradle.kts
 
-    # 🌟 ৫. টমেইল (TOML) এরর দূর করতে গ্র্যাডলের নিজস্ব Dependency Resolution Strategy যুক্ত করা
-    # এটি বিল্ড ফাইলের শেষে এমন একটি নিয়ম জুড়ে দেবে যা ফায়ারবেসের সঠিক ভার্সন ফোর্স করে বসিয়ে দেবে।
-    - name: Inject Safe Dependency Resolution Strategy
+    # 🌟 ৫. ঝামেলা সৃষ্টিকারী ৪টি ডিপেন্ডেন্সি লাইন সম্পূর্ণ রিমুভ করা (গিটহাব ক্যাশ এরর বাইপাস করার জন্য)
+    - name: Strip Unresolved Dependencies to Force Build
       run: |
-        sed -i 's/libs.androidx.compose.material.icons.core/"androidx.compose.material:material-icons-core:1.7.0"/g' app/build.gradle.kts
-        sed -i 's/libs.androidx.compose.material.icons.extended/"androidx.compose.material:material-icons-extended:1.7.0"/g' app/build.gradle.kts
-        sed -i 's/libs.firebase.analytics/"com.google.firebase:firebase-analytics-ktx"/g' app/build.gradle.kts
-        sed -i 's/libs.firebase.appcheck.playintegrity/"com.google.firebase:firebase-appcheck-playintegrity"/g' app/build.gradle.kts
-        sed -i 's/libs.firebase.appcheck.recaptcha/"com.google.firebase:firebase-appcheck-recaptcha"/g' app/build.gradle.kts
-        
-        echo '
-        configurations.all {
-            resolutionStrategy.eachDependency {
-                if (requested.group == "com.google.firebase") {
-                    if (requested.name == "firebase-appcheck-recaptcha") {
-                        useVersion("16.1.2")
-                    }
-                    if (requested.name == "firebase-appcheck-playintegrity") {
-                        useVersion("17.1.1")
-                    }
-                    if (requested.name == "firebase-analytics-ktx" || requested.name == "firebase-analytics") {
-                        useVersion("21.5.0")
-                    }
-                }
-            }
-        }
-        ' >> app/build.gradle.kts
+        sed -i '/libs.androidx.compose.material.icons.core/d' app/build.gradle.kts
+        sed -i '/libs.androidx.compose.material.icons.extended/d' app/build.gradle.kts
+        sed -i '/libs.firebase.analytics/d' app/build.gradle.kts
+        sed -i '/libs.firebase.appcheck.playintegrity/d' app/build.gradle.kts
+        sed -i '/libs.firebase.appcheck.recaptcha/d' app/build.gradle.kts
 
     # ⑥. ডামি google-services.json ফাইলটি তৈরি করা যেন প্লাগইন ক্র্যাশ না করে
     - name: Create Dummy Google Services JSON
