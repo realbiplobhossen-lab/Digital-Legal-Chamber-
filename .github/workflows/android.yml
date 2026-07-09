@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # ১. GitHub密集 কোড ডাউনলোড করা
+    # ১. GitHub রিপোজিটরি থেকে কোড ডাউনলোড করা
     - name: Checkout project source code
       uses: actions/checkout@v4
 
@@ -33,16 +33,16 @@ jobs:
       run: |
         sed -i '/alias(libs.plugins.roborazzi)/d' app/build.gradle.kts
 
-    # 🌟 ৫. টমেইল (TOML) রেফারেন্সের মিসিং ভার্সন এবং রিক্যাপচা লাইব্রেরি ফিক্স করা
+    # 🌟 ৫. টমেইল (TOML) রেফারেন্সের সঠিক রূপান্তর (Firebase BOM কে ভার্সন ম্যানেজ করতে দেওয়া)
     - name: Fix Unresolved Dependency References
       run: |
         sed -i 's/libs.androidx.compose.material.icons.core/"androidx.compose.material:material-icons-core:1.7.0"/g' app/build.gradle.kts
         sed -i 's/libs.androidx.compose.material.icons.extended/"androidx.compose.material:material-icons-extended:1.7.0"/g' app/build.gradle.kts
         sed -i 's/libs.firebase.analytics/"com.google.firebase:firebase-analytics"/g' app/build.gradle.kts
         sed -i 's/libs.firebase.appcheck.playintegrity/"com.google.firebase:firebase-appcheck-playintegrity"/g' app/build.gradle.kts
-        sed -i 's/libs.firebase.appcheck.recaptcha/"com.google.firebase:firebase-appcheck-recaptcha:16.1.2"/g' app/build.gradle.kts
+        sed -i 's/libs.firebase.appcheck.recaptcha/"com.google.firebase:firebase-appcheck-recaptcha"/g' app/build.gradle.kts
 
-    # 🌟 ⑥. মিসিং google-services.json ফাইলটি ডামি হিসেবে তৈরি করা যেন প্লাগইন ক্র্যাশ না করে
+    # ⑥. ডামি google-services.json ফাইলটি তৈরি করা যেন প্লাগইন ক্র্যাশ না করে
     - name: Create Dummy Google Services JSON
       run: |
         mkdir -p app
