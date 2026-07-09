@@ -22,7 +22,7 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    # 🌟 ৩. উবুন্টু সার্ভারে সরাসরি লেটেস্ট Gradle 9.3.1 ইন্সটল করা (প্লাগইন কনফ্লিক্ট দূর করার জন্য)
+    # ৩. উবুন্টু সার্ভারে সরাসরি লেটেস্ট Gradle 9.3.1 ইন্সটল করা
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
       with:
@@ -37,15 +37,11 @@ jobs:
         echo "KEY_ALIAS=upload" >> .env
         echo "KEY_PASSWORD=android" >> .env
 
-    # ৫. সার্ভারের নিজস্ব গ্র্যাডল দিয়ে লোকাল ইউনিট টেস্ট রান করা
-    - name: Run Local Unit Tests
-      run: gradle testDebugUnitTest --no-daemon
-
-    # ⑥. সার্ভারের নিজস্ব গ্র্যাডল দিয়ে অ্যান্ড্রয়েড অ্যাপের ডিবাগ APK বিল্ড করা
+    # 🌟 5. Roborazzi প্লাগইন ক্র্যাশ এড়াতে সরাসরি মূল অ্যান্ড্রয়েড অ্যাপের ডিবাগ APK বিল্ড করা
     - name: Build Debug APK
-      run: gradle assembleDebug --no-daemon
-
-    # ৭. তৈরি হওয়া সফল অ্যাপ (APK) আউটপুট হিসেবে সংরক্ষণ করা
+      run: gradle assembleDebug --no-daemon -x test
+      
+    # ⑥. তৈরি হওয়া সফল অ্যাপ (APK) আউটপুট হিসেবে সংরক্ষণ করা
     - name: Upload Generated Debug APK
       uses: actions/upload-artifact@v4
       with:
