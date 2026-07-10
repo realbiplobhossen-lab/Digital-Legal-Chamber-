@@ -47,7 +47,7 @@ jobs:
         sed -i '/libs.firebase.appcheck.playintegrity/d' app/build.gradle.kts
         sed -i '/libs.firebase.appcheck.recaptcha/d' app/build.gradle.kts
 
-    # 🌟 ৭. KSP টাইপ মিসিং ক্র্যাশ এড়াতে Dao ফাইলকে পুরোপুরি মিনিমাল করে ফেলা
+    # 🌟 ৭. KSP-বান্ধব ও নিরাপদ এস্কেপিং সহ ফ্রেশ Dao.kt তৈরি করা
     - name: Bypass Room Dao Queries for CI Build
       run: |
         cat << 'EOF' > app/src/main/java/com/example/data/Dao.kt
@@ -66,7 +66,7 @@ jobs:
         }
         EOF
 
-    # 🌟 ৮. AppDatabase.kt ফাইলের KSP MissingType এরর দূর করতে অল-ইন-ওয়ান স্ট্রাকচার দেওয়া
+    # 🌟 ৮. KSP-বান্ধব ও নিরাপদ এস্কেপিং সহ ফ্রেশ AppDatabase.kt তৈরি করা
     - name: Hotfix AppDatabase and Entity Types for KSP
       run: |
         cat << 'EOF' > app/src/main/java/com/example/data/AppDatabase.kt
