@@ -100,12 +100,12 @@ jobs:
         }
         EOF
 
-    # ১০. AI Studio এর স্ক্রিনশটের হুবহু প্রিমিয়াম ডার্ক থিম ইন্টারফেস ফিরিয়ে আনা
+    # ১০. UI স্ক্রিনগুলোকে AI Studio-এর লাক্সারি ডার্ক থিম লেআউটে রূপান্তর (প্যারামিটার এরর ফিক্সড)
     - name: Restore Premium Google AI Studio UI Designs
       run: |
         mkdir -p app/src/main/java/com/example/ui/screens
         
-        # DashboardScreen.kt - হুবহু আপনার স্ক্রিনশটের মতো প্রিমিয়াম ডার্ক ইন্টারফেস
+        # DashboardScreen.kt (modifier: Modifier টাইপ এরর ফিক্সড)
         cat << 'EOF' > app/src/main/java/com/example/ui/screens/DashboardScreen.kt
         package com.example.ui.screens
         import androidx.compose.foundation.background
@@ -135,7 +135,6 @@ jobs:
                     .padding(16.dp)
                     .verticalScroll(rememberScrollState())
             ) {
-                // ১. ডিজিটাল লিগ্যাল চেম্বার প্রিমিয়াম ব্যানার
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
@@ -150,7 +149,6 @@ jobs:
                 
                 Spacer(modifier = Modifier.height(20.dp))
                 
-                // ২. গ্রিড কার্ডস (৪টি কাউন্টার কার্ড)
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     DashboardCard(modifier = Modifier.weight(1f), title = "আজকের শুনানি", value = "0", cardColor = cardColor, iconText = "⚖")
                     DashboardCard(modifier = Modifier.weight(1f), title = "৭ দিনের কেস", value = "0", cardColor = cardColor, iconText = "📅")
@@ -165,7 +163,6 @@ jobs:
                 Text("কুইক অ্যাকশন", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(12.dp))
                 
-                // ৩. কুইক অ্যাকশন বাটনসমূহ
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     QuickActionButton(modifier = Modifier.weight(1f), label = "ভয়েস নোট", icon = "🎙", containerColor = cardColor)
                     QuickActionButton(modifier = Modifier.weight(1f), label = "আইন বুক", icon = "📖", containerColor = cardColor)
@@ -177,7 +174,6 @@ jobs:
                 Text("আজকের কাজ লিস্ট (0)", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(10.dp))
                 
-                // ৪. শুনানির ফাঁকা স্টেট কার্ড
                 Card(
                     modifier = Modifier.fillMaxWidth().height(100.dp),
                     shape = RoundedCornerShape(12.dp),
@@ -191,7 +187,7 @@ jobs:
         }
         
         @Composable
-        fun DashboardCard(modifier = Modifier.modifier, title: String, value: String, cardColor: Color, iconText: String) {
+        fun DashboardCard(modifier: Modifier, title: String, value: String, cardColor: Color, iconText: String) {
             Card(
                 modifier = modifier,
                 shape = RoundedCornerShape(12.dp),
@@ -209,14 +205,14 @@ jobs:
         }
         
         @Composable
-        fun QuickActionButton(modifier = Modifier.modifier, label: String, icon: String, containerColor: Color) {
+        fun QuickActionButton(modifier: Modifier, label: String, icon: String, containerColor: Color) {
             Card(
                 modifier = modifier,
                 shape = RoundedCornerShape(12.dp),
                 colors = CardDefaults.cardColors(containerColor = containerColor)
             ) {
                 Column(modifier = Modifier.padding(12.dp).fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(icon, fontSize = 20.dp.value.sp)
+                    Text(icon, fontSize = 20.sp)
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(label, color = Color.White, fontSize = 11.sp)
                 }
@@ -296,7 +292,7 @@ jobs:
         }
         EOF
 
-        # OtherScreens.kt ফিক্স
+        # OtherScreens.kt
         cat << 'EOF' > app/src/main/java/com/example/ui/screens/OtherScreens.kt
         package com.example.ui.screens
         import androidx.compose.runtime.Composable
@@ -307,7 +303,7 @@ jobs:
         }
         EOF
 
-        # VoiceNotesScreen.kt ফিক্স
+        # VoiceNotesScreen.kt
         cat << 'EOF' > app/src/main/java/com/example/ui/screens/VoiceNotesScreen.kt
         package com.example.ui.screens
         import androidx.compose.runtime.Composable
@@ -318,7 +314,7 @@ jobs:
         }
         EOF
 
-        # LegalApp.kt - ডার্ক থিমড টপবার এবং প্রিমিয়াম বটম নেভিগেশন বার (বাংলা টেক্সট সহ)
+        # LegalApp.kt
         cat << 'EOF' > app/src/main/java/com/example/ui/LegalApp.kt
         package com.example.ui
         
@@ -341,7 +337,7 @@ jobs:
                 Scaffold(
                     topBar = {
                         TopAppBar(
-                            title = { Text("ড্যাশবোর্ড (Dashboard)", color = Color.White) },
+                            title = { Text("ড্যাশবোর্ড", color = Color.White) },
                             colors = TopAppBarDefaults.topAppBarColors(containerColor = darkBackground)
                         )
                     },
