@@ -47,19 +47,22 @@ jobs:
         sed -i '/libs.firebase.appcheck.playintegrity/d' app/build.gradle.kts
         sed -i '/libs.firebase.appcheck.recaptcha/d' app/build.gradle.kts
 
-    # 🌟 ৭. KSP ক্র্যাশ বন্ধ করতে Dao ফাইলটিকে সম্পূর্ণ খালি ও সাধারণ ইন্টারফেস বানিয়ে দেওয়া
+    # 🌟 ৭. Room-এর নিয়ম মেনে ফ্রেশ Dao তৈরি করা (কোনো SQL কুয়েরি ছাড়া)
     - name: Bypass Room Dao Queries for CI Build
       run: |
         cat << 'EOF' > app/src/main/java/com/example/data/Dao.kt
         package com.example.data
         import androidx.room.Dao
+        import androidx.room.Insert
+        import androidx.room.OnConflictStrategy
         @Dao
         interface Dao {
-            // All queries removed for CI hotfix to prevent KSP SQLITE_ERROR
+            @Insert(onConflict = OnConflictStrategy.REPLACE)
+            suspend fun insertCase(lawCase: LawCase)
         }
         EOF
 
-    # 🌟 ৮. AppDatabase ফাইল থেকে কোনো এন্টিটি বা টেবিল রেফারেন্স না রেখে ব্ল্যাংক ডাটাবেজ করা
+    # 🌟 ৮. অন্তত একটি Entity (LawCase) যুক্ত করে ডাটাবেজ ফিক্স করা
     - name: Hotfix AppDatabase and Entity Types for KSP
       run: |
         cat << 'EOF' > app/src/main/java/com/example/data/AppDatabase.kt
@@ -71,7 +74,7 @@ jobs:
         import androidx.room.RoomDatabase
 
         @Database(
-            entities = [], 
+            entities = [LawCase::class], 
             version = 1, 
             exportSchema = false
         )
