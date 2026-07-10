@@ -123,12 +123,12 @@ jobs:
         }
         EOF
 
-      # ১০. UI স্ক্রিনগুলোকে ডাইনামিক লেআউট ও বটম নেভিগেশন দিয়ে সচল করা
+    # ১০. UI স্ক্রিনগুলোকে ডাইনামিক লেআউট ও বটম নেভিগেশন দিয়ে সচল করা
     - name: Hotfix Broken Composable Screens to Pass Compilation
       run: |
         mkdir -p app/src/main/java/com/example/ui/screens
         
-        # DashboardScreen.kt - সুন্দর ড্যাশবোর্ড কার্ড ও ডাটা কাউন্টার
+        # DashboardScreen.kt
         cat << 'EOF' > app/src/main/java/com/example/ui/screens/DashboardScreen.kt
         package com.example.ui.screens
         import androidx.compose.foundation.layout.*
@@ -152,7 +152,7 @@ jobs:
         }
         EOF
 
-        # ClientScreen.kt - ক্লায়েন্ট ম্যানেজমেন্ট লেআউট
+        # ClientScreen.kt
         cat << 'EOF' > app/src/main/java/com/example/ui/screens/ClientScreen.kt
         package com.example.ui.screens
         import androidx.compose.foundation.layout.*
@@ -171,7 +171,7 @@ jobs:
         }
         EOF
 
-        # CaseScreen.kt - মামলা ট্র্যাকিং লেআউট
+        # CaseScreen.kt
         cat << 'EOF' > app/src/main/java/com/example/ui/screens/CaseScreen.kt
         package com.example.ui.screens
         import androidx.compose.foundation.layout.*
@@ -190,7 +190,7 @@ jobs:
         }
         EOF
 
-        # AiAssistantScreen.kt - এআই অ্যাসিস্ট্যান্ট ইন্টারফেস
+        # AiAssistantScreen.kt
         cat << 'EOF' > app/src/main/java/com/example/ui/screens/AiAssistantScreen.kt
         package com.example.ui.screens
         import androidx.compose.foundation.layout.*
@@ -247,11 +247,12 @@ jobs:
         }
         EOF
 
-        # LegalApp.kt - ডামি টেক্সট সরিয়ে আসল স্ক্রিন লোড করার জন্য নেভিগেশন ও থিম যুক্তকরণ
+        # LegalApp.kt - (ইমপোর্ট এবং বক্স ফিক্স করা সংস্করণ)
         cat << 'EOF' > app/src/main/java/com/example/ui/LegalApp.kt
         package com.example.ui
         
         import androidx.compose.foundation.layout.padding
+        import androidx.compose.foundation.layout.Box
         import androidx.compose.material3.*
         import androidx.compose.runtime.*
         import androidx.compose.ui.Modifier
@@ -291,7 +292,6 @@ jobs:
             }
         }
         EOF
-        
 
     # ১১. ডামি google-services.json ফাইলটি তৈরি করা যেন প্লাগইন ক্র্যাশ না করে
     - name: Create Dummy Google Services JSON
@@ -299,7 +299,7 @@ jobs:
         mkdir -p app
         echo '{"project_info":{"project_number":"123","project_id":"dummy","storage_bucket":"dummy"},"client":[{"client_info":{"mobilesdk_app_id":"1:123:android:123","android_client_info":{"package_name":"com.aistudio.digitallegalchamber.lkjsda"}},"api_key":[{"current_key":"dummy"}],"services":{}}],"configuration_version":"3"}' > app/google-services.json
 
-    # ১২. GitHub Secrets থেকে সুরক্ষিতভাবে আসল Gemini API Key নিয়ে .env ফাইল তৈরি করা
+    # ১২. GitHub Secrets থেকে .env ফাইল তৈরি করা
     - name: Create Production .env file from GitHub Secrets
       run: |
         echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" > .env
