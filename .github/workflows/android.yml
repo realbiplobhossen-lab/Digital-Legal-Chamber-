@@ -123,7 +123,7 @@ jobs:
         }
         EOF
 
-    # ১০. ঝামেলার সব UI স্ক্রিনগুলোকে (CaseScreen সহ) ওভাররাইট করে ফিক্স করা
+    # ১০. ঝামেলার সব UI স্ক্রিনগুলোকে (AiAssistantScreen সহ) ওভাররাইট করে ফিক্স করা
     - name: Hotfix Broken Composable Screens to Pass Compilation
       run: |
         mkdir -p app/src/main/java/com/example/ui/screens
@@ -183,7 +183,7 @@ jobs:
         }
         EOF
 
-        # CaseScreen.kt ফিক্স (নতুন সংযুক্ত - টাইপ ও অতিরিক্ত আর্গুমেন্ট এরর দূর করার জন্য)
+        # CaseScreen.kt ফিক্স
         cat << 'EOF' > app/src/main/java/com/example/ui/screens/CaseScreen.kt
         package com.example.ui.screens
         import androidx.compose.runtime.Composable
@@ -191,6 +191,17 @@ jobs:
         @Composable
         fun CaseScreen(viewModel: com.example.viewmodel.LegalViewModel) {
             Text("Case Screen Placeholder")
+        }
+        EOF
+
+        # AiAssistantScreen.kt ফিক্স (নতুন সংযুক্ত - টাইপ ও আনরিজলভড এরর দূর করার জন্য)
+        cat << 'EOF' > app/src/main/java/com/example/ui/screens/AiAssistantScreen.kt
+        package com.example.ui.screens
+        import androidx.compose.runtime.Composable
+        import androidx.compose.material3.Text
+        @Composable
+        fun AiAssistantScreen(viewModel: com.example.viewmodel.LegalViewModel) {
+            Text("AI Assistant Screen Placeholder")
         }
         EOF
 
