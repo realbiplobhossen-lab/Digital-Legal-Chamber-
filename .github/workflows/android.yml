@@ -123,7 +123,7 @@ jobs:
         }
         EOF
 
-    # 🌟 ১০. ঝামেলার UI স্ক্রিনগুলোকে (OtherScreens, VoiceNotesScreen, LegalApp) ওভাররাইট করে ফিক্স করা
+    # 🌟 ১০. ঝামেলার UI স্ক্রিনগুলোকে (OtherScreens, VoiceNotesScreen, LibraryScreen, LegalApp) ওভাররাইট করে ফিক্স করা
     - name: Hotfix Broken Composable Screens to Pass Compilation
       run: |
         mkdir -p app/src/main/java/com/example/ui/screens
@@ -147,6 +147,17 @@ jobs:
         @Composable
         fun VoiceNotesScreen(viewModel: com.example.viewmodel.LegalViewModel) {
             Text("Voice Notes Screen Placeholder")
+        }
+        EOF
+
+        # LibraryScreen.kt ফিক্স (নতুন সংযুক্ত)
+        cat << 'EOF' > app/src/main/java/com/example/ui/screens/LibraryScreen.kt
+        package com.example.ui.screens
+        import androidx.compose.runtime.Composable
+        import androidx.compose.material3.Text
+        @Composable
+        fun LibraryScreen(viewModel: com.example.viewmodel.LegalViewModel) {
+            Text("Library Screen Placeholder")
         }
         EOF
 
